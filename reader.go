@@ -539,23 +539,29 @@ func readDirectoryEnd(r io.ReaderAt, size int64) (dir *directoryEnd, err error) 
 func findDirectory64End(r io.ReaderAt, directoryEndOffset int64) (int64, error) {
 	locOffset := directoryEndOffset - directory64LocLen
 	if locOffset < 0 {
+		dbg("findDir64End offset=%d len=%d", directoryEndOffset, directory64LocLen)
 		return -1, nil // no need to look for a header outside the file
 	}
 	buf := make([]byte, directory64LocLen)
 	if _, err := r.ReadAt(buf, locOffset); err != nil {
+		dbg("findDir64End read error %s", err)
 		return -1, err
 	}
 	b := readBuf(buf)
 	if sig := b.uint32(); sig != directory64LocSignature {
+		dbg("directory64LocSignature %q", buf)
 		return -1, nil
 	}
 	if b.uint32() != 0 { // number of the disk with the start of the zip64 end of central directory
+		dbg("number of the disk %q", buf)
 		return -1, nil // the file is not a valid zip64-file
 	}
 	p := b.uint64()      // relative offset of the zip64 end of central directory record
 	if b.uint32() != 1 { // total number of disks
+		dbg("total number of disks %q", buf)
 		return -1, nil // the file is not a valid zip64-file
 	}
+	dbg("zip64 offset=%d", p)
 	return int64(p), nil
 }
 
