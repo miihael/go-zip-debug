@@ -13,6 +13,7 @@ import (
 	"hash/crc32"
 	"io"
 	"os"
+	"runtime"
 	"time"
 )
 
@@ -43,7 +44,9 @@ type File struct {
 }
 
 func dbg(msg string, args ...interface{}) {
-	fmt.Fprintf(os.Stderr, "DBG: "+msg+"\n", args...)
+	_, fn, line, _ := runtime.Caller(1)
+	prefix := fmt.Sprintf("DBG[%d]:%s: ", line, fn)
+	fmt.Fprintf(os.Stderr, prefix+msg+"\n", args...)
 }
 
 func (f *File) hasDataDescriptor() bool {
