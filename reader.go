@@ -13,7 +13,6 @@ import (
 	"hash/crc32"
 	"io"
 	"os"
-	"runtime"
 	"time"
 )
 
@@ -41,12 +40,6 @@ type File struct {
 	zipr         io.ReaderAt
 	zipsize      int64
 	headerOffset int64
-}
-
-func dbg(msg string, args ...interface{}) {
-	pc, _, line, _ := runtime.Caller(1)
-	prefix := fmt.Sprintf("DBG[%d]:%s: ", line, runtime.FuncForPC(pc).Name())
-	fmt.Fprintf(os.Stderr, prefix+msg+"\n", args...)
 }
 
 func (f *File) hasDataDescriptor() bool {
