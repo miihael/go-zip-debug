@@ -266,7 +266,7 @@ func readDirectoryHeader(f *File, r io.Reader) error {
 	}
 	b := readBuf(buf[:])
 	if sig := b.uint32(); sig != directoryHeaderSignature {
-		dbg("directoryHeaderSignature %d", sig)
+		dbg("directoryHeaderSignature sig=%d buf=%q", sig, buf)
 		return ErrFormat
 	}
 	f.CreatorVersion = b.uint16()
