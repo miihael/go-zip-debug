@@ -556,12 +556,12 @@ func findDirectory64End(r io.ReaderAt, directoryEndOffset int64) (int64, error) 
 		dbg("number of the disk %q", buf)
 		return -1, nil // the file is not a valid zip64-file
 	}
-	p := b.uint64()      // relative offset of the zip64 end of central directory record
-	if b.uint32() != 1 { // total number of disks
+	p := b.uint64()     // relative offset of the zip64 end of central directory record
+	if b.uint32() > 1 { // total number of disks
 		dbg("total number of disks %q", buf)
 		return -1, nil // the file is not a valid zip64-file
 	}
-	dbg("zip64 offset=%d", p)
+	//dbg("zip64 offset=%d", p)
 	return int64(p), nil
 }
 
