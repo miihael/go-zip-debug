@@ -111,10 +111,11 @@ func (z *Reader) init(r io.ReaderAt, size int64) error {
 		f := &File{zip: z, zipr: r, zipsize: size}
 		err = readDirectoryHeader(f, buf)
 		if err == ErrFormat || err == io.ErrUnexpectedEOF {
-			dbg("readDirectoryHeader")
+			dbg("%d: readDirectoryHeader offset=%d", len(z.File), end.directoryOffset)
 			break
 		}
 		if err != nil {
+			dbg("readDirectoryHeader %s", err)
 			return err
 		}
 		z.File = append(z.File, f)
